@@ -17,7 +17,7 @@ export default class StickyNote {
             if (!response.submitted) return;
             this.didSaveOnce = true;
             this.text.text.contents = response.text;
-            this.text.text.height = 0.28 / response.text.length;
+            this.text.text.height = 0.42 / response.text.length;
             MRE.log.info("app", `Wrote sticky note? ${response.submitted} : ${response.text}`);
         })
     }
@@ -28,7 +28,7 @@ export default class StickyNote {
         this.actor = MRE.Actor.CreatePrimitive(new MRE.AssetContainer(this.context), {
             definition: {
                 shape: MRE.PrimitiveShape.Box,
-                dimensions: { x: 0.16, y: 0.16, z: 0.01 },
+                dimensions: { x: 0.24, y: 0.16, z: 0.01 },
             },
             actor: {
                 name: 'StickyNote',

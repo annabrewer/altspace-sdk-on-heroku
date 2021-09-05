@@ -73,8 +73,10 @@ export default class HelloWorld {
 
 		let sn_mat = container.createMaterial("sticky-note-mat", {color: {r:1,g:1,b:0.6}});
 		
-		let sn = new StickyNote(this.context, sn_mat, {x: 0,y:0, z:1.5});
+		let sn = new StickyNote(this.context, sn_mat, {x: 0,y:0.12, z:1.5});
 
-		let rig = new RandomIdeaGenerator(this.context, sn_mat, {x: 0, y: 0, z: 1.8})
+		let rig_mat = container.createMaterial("rig-note-mat", {color: {r:0.75,g:0.7,b:1}});
+
+		let rig = new RandomIdeaGenerator(this.context, rig_mat, {x: 0, y: 0.08, z: 1.8})
 	}
 }
