@@ -3,180 +3,75 @@
  * Licensed under the MIT License.
  */
 
-import {
-    Actor,
-    AnimationKeyframe,
-    AnimationWrapMode,
-    ButtonBehavior,
-    Context,
-    Quaternion,
-    TextAnchorLocation,
-    Vector3
-} from '@microsoft/mixed-reality-extension-sdk';
+import * as MRE from '@microsoft/mixed-reality-extension-sdk';
+import StickyNote from './sticky-note';
+import Thing from './thing';
+import fs from 'fs';
+
+import util from 'util';
+import AppEnvironment from './env';
+// import PaintCan from './paint-can';
+
+const readdir = util.promisify(fs.readdir);
 
 /**
  * The main class of this app. All the logic goes here.
  */
 export default class HelloWorld {
-    private text: Actor = null;
-    private cube: Actor = null;
+	private text: MRE.Actor = null;
+	private cube: MRE.Actor = null;
+	private assets: MRE.AssetContainer;
 
-    constructor(private context: Context, private baseUrl: string) {
-        this.context.onStarted(() => this.started());
-    }
+	constructor(private context: MRE.Context) {
+		this.assets = new MRE.AssetContainer(context);
+		this.context.onStarted(() => this.started());
+		
+	}
 
-    /**
-     * Once the context is "started", initialize the app.
-     */
-    private started() {
+	/**
+	 * Once the context is "started", initialize the app.
+	 */
+	private async started() {
+		MRE.log.info("app", "ID: "+this.context.sessionId);
 
-        // Create a new actor with no mesh, but some text. This operation is asynchronous, so
-        // it returns a "forward" promise (a special promise, as we'll see later).
-        const textPromise = Actor.CreateEmpty(this.context, {
+		const container = new MRE.AssetContainer(this.context);
+
+		const env = new AppEnvironment();
+		// const paints = [
+		// 	container.createMaterial("blue", {color:{r:0,g:0,b:1}}),
+		// 	container.createMaterial("red", {color:{r:1,g:0,b:0}}),
+		// ];
+
+		const simple_models_folder = 'simple-models';
+		const model_files = await readdir(`./public/${simple_models_folder}`);
+
+		const models = await Promise.all(model_files.map(fname=> this.assets.loadGltf(`${simple_models_folder}/${fname}`,'mesh').then(assets=>assets.find(a=>a.prefab!==null) as MRE.Prefab)));
+		const table_model = await this.assets.loadGltf('long-table.glb','mesh').then(assets=>assets.find(a=>a.prefab!==null) as MRE.Prefab);
+		
+        const table = MRE.Actor.CreateFromPrefab(this.context, {
+            prefab: table_model,    
             actor: {
-                name: 'Text',
-                transform: {
-                    position: { x: 0, y: 0.5, z: 0 }
+				transform: {
+					local: {
+						position: {y:-1},
+                    }
                 },
-                text: {
-                    contents: "Tom's da Man!",
-                    anchor: TextAnchorLocation.MiddleCenter,
-                    color: { r: 30 / 255, g: 206 / 255, b: 213 / 255 },
-                    height: 0.3
-                }
             }
         });
 
-        // Even though the actor is not yet created in Altspace (because we didn't wait for the promise),
-        // we can still get a reference to it by grabbing the `value` field from the forward promise.
-        this.text = textPromise.value;
+		// const paint_can = await this.assets.loadGltf('paint-bucket.glb','mesh').then(assets=>assets.find(a=>a.prefab!==null) as MRE.Prefab);
 
-        // Here we create an animation on our text actor. Animations have three mandatory arguments:
-        // a name, an array of keyframes, and an array of events.
-        this.text.createAnimation({
-            // The name is a unique identifier for this animation. We'll pass it to "startAnimation" later.
-            animationName: "Spin",
-            // Keyframes define the timeline for the animation: where the actor should be, and when.
-            // We're calling the generateSpinKeyframes function to produce a simple 20-second revolution.
-            keyframes: this.generateSpinKeyframes(20, Vector3.Up()),
-            // Events are points of interest during the animation. The animating actor will emit a given
-            // named event at the given timestamp with a given string value as an argument.
-            events: [],
+		// paints.forEach((value,index,array) => new PaintCan(this.context,env,value,paint_can,{x:0.5,y:0,z:-0.2*index}));
+		
+		let inc = 0.2;
+		let mn = (models.length-1)*0.5 * inc;
+		
+		for(let i = 0; i < models.length;i++) {
+			let mu = new Thing(this.context,env,models[i],{x:0, y:0, z:mn -inc * i});
+		}
 
-            // Optionally, we also repeat the animation infinitely.
-            wrapMode: AnimationWrapMode.Loop
-        })
-            .catch(reason => this.context.logger.log('error', `Failed to create spin animation: ${reason}`));
-
-        // Load a glTF model
-        const cubePromise = Actor.CreateFromGLTF(this.context, {
-            // at the given URL
-            resourceUrl: `${this.baseUrl}/altspace-cube.glb`,
-            // and spawn box colliders around the meshes.
-            colliderType: 'box',
-            // Also apply the following generic actor properties.
-            actor: {
-                name: 'Altspace Cube',
-                // Parent the glTF model to the text actor.
-                parentId: this.text.id,
-                transform: {
-                    position: { x: 0, y: -1, z: 0 },
-                    scale: { x: 0.4, y: 0.4, z: 0.4 }
-                }
-            }
-        });
-
-        // Grab that early reference again.
-        this.cube = cubePromise.value;
-
-        // Create some animations on the cube.
-        this.cube.createAnimation({
-            animationName: 'GrowIn',
-            keyframes: this.growAnimationData,
-            events: []
-        })
-            .catch(reason => this.context.logger.log('error', `Failed to create grow animation: ${reason}`));
-
-        this.cube.createAnimation({
-            animationName: 'ShrinkOut',
-            keyframes: this.shrinkAnimationData,
-            events: []
-        })
-            .catch(reason => this.context.logger.log('error', `Failed to create shrink animation: ${reason}`));
-
-        this.cube.createAnimation({
-            animationName: 'DoAFlip',
-            keyframes: this.generateSpinKeyframes(1.0, Vector3.Right()),
-            events: []
-        })
-            .catch(reason => this.context.logger.log('error', `Failed to create flip animation: ${reason}`));
-
-        // Now that the text and its animation are all being set up, we can start playing
-        // the animation.
-        this.text.startAnimation('Spin');
-
-        // Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
-        // Button behaviors have two pairs of events: hover start/stop, and click start/stop.
-        const buttonBehavior = this.cube.setBehavior(ButtonBehavior);
-
-        // Trigger the grow/shrink animations on hover.
-        buttonBehavior.onHover('enter', (userId: string) => {
-            this.cube.startAnimation('GrowIn');
-        }
-        );
-        buttonBehavior.onHover('exit', (userId: string) => {
-            this.cube.startAnimation('ShrinkOut');
-        }
-        );
-
-        // When clicked, do a 360 sideways.
-        buttonBehavior.onClick('pressed', (userId: string) => {
-            this.cube.startAnimation('DoAFlip');
-        }
-        );
-
-    }
-
-    /**
-     * Generate keyframe data for a simple spin animation.
-     * @param duration The length of time in seconds it takes to complete a full revolution.
-     * @param axis The axis of rotation in local space.
-     */
-    private generateSpinKeyframes(duration: number, axis: Vector3): AnimationKeyframe[] {
-        return [{
-            time: 0 * duration,
-            value: { transform: { rotation: Quaternion.RotationAxis(axis, 0) } }
-        }, {
-            time: 0.25 * duration,
-            value: { transform: { rotation: Quaternion.RotationAxis(axis, Math.PI / 2) } }
-        }, {
-            time: 0.5 * duration,
-            value: { transform: { rotation: Quaternion.RotationAxis(axis, Math.PI) } }
-        }, {
-            time: 0.75 * duration,
-            value: { transform: { rotation: Quaternion.RotationAxis(axis, 3 * Math.PI / 2) } }
-        }, {
-            time: 1 * duration,
-            value: { transform: { rotation: Quaternion.RotationAxis(axis, 2 * Math.PI) } }
-        }, {
-            time: 2 * duration,
-            value: { transform: { rotation: Quaternion.RotationAxis(axis, 2 * Math.PI) } }
-        }];
-    }
-
-    private growAnimationData: AnimationKeyframe[] = [{
-        time: 0,
-        value: { transform: { scale: { x: 0.4, y: 0.4, z: 0.4 } } }
-    }, {
-        time: 0.3,
-        value: { transform: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
-    }];
-
-    private shrinkAnimationData: AnimationKeyframe[] = [{
-        time: 0,
-        value: { transform: { scale: { x: 0.5, y: 0.5, z: 0.5 } } }
-    }, {
-        time: 0.3,
-        value: { transform: { scale: { x: 0.4, y: 0.4, z: 0.4 } } }
-    }];
+		let sn_mat = container.createMaterial("sticky-note-mat", {color: {r:1,g:1,b:0.6}});
+		
+		let sn = new StickyNote(this.context, sn_mat, {x: 0,y:0, z:1.5});
+	}
 }
