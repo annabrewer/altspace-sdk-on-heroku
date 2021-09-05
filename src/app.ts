@@ -4,6 +4,7 @@
  */
 
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
+import RandomIdeaGenerator from './random-idea-generator'
 import StickyNote from './sticky-note';
 import Thing from './thing';
 import fs from 'fs';
@@ -73,5 +74,7 @@ export default class HelloWorld {
 		let sn_mat = container.createMaterial("sticky-note-mat", {color: {r:1,g:1,b:0.6}});
 		
 		let sn = new StickyNote(this.context, sn_mat, {x: 0,y:0, z:1.5});
+
+		let rig = new RandomIdeaGenerator(this.context, sn_mat, {x: 0, y: 0, z: 1.8})
 	}
 }
