@@ -807,6 +807,8 @@
       "strictNullChecks": false,
       "moduleResolution": 2,
       "esModuleInterop": true,
+      "watch": true,
+      "preserveWatchOutput": true,
       "configFilePath": "./tsconfig.json"
     },
     "referencedMap": {
@@ -2057,6 +2059,9 @@
         "./node_modules/@microsoft/mixed-reality-extension-sdk/built/user/index.d.ts",
         "./node_modules/@microsoft/mixed-reality-extension-sdk/built/util/index.d.ts"
       ],
+      "./src/random-idea-generator.ts": [
+        "./node_modules/@microsoft/mixed-reality-extension-sdk/built/index.d.ts"
+      ],
       "./src/sticky-note.ts": [
         "./node_modules/@microsoft/mixed-reality-extension-sdk/built/index.d.ts"
       ],
@@ -2069,9 +2074,6 @@
       ],
       "./node_modules/@types/dotenv/index.d.ts": [
         "./node_modules/@types/node/index.d.ts"
-      ],
-      "./src/random-idea-generator.ts": [
-        "./node_modules/@microsoft/mixed-reality-extension-sdk/built/index.d.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
@@ -2265,13 +2267,13 @@
       "./src/sticky-note.ts",
       "./src/env.ts",
       "./src/thing.ts",
+      "./src/app.ts",
       "./src/paint-can.ts",
       "./node_modules/@types/dotenv/index.d.ts",
       "./src/server.ts",
       "./node_modules/@types/eslint-visitor-keys/index.d.ts",
       "./node_modules/@types/json-schema/index.d.ts",
-      "./src/random-idea-generator.ts",
-      "./src/app.ts"
+      "./src/random-idea-generator.ts"
     ]
   },
   "version": "3.8.3"

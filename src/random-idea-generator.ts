@@ -8,9 +8,9 @@ export default class RandomIdeaGenerator {
     private actor: MRE.Actor;
     private text: MRE.Actor = null;
     private didClone = false;
-    private adjectives = ['collaborative', 'competitive', 'crowdsourced', 'meta', 'asymmetric']
-    private activities = ['art gallery', 'improv performance', 'card game', 'sculpture', 'DJ set', 'dress-up party', 'food fight', 'escape room']
-    private environments = ['in space', 'in the jungle', 'in zero-g']
+    private adjectives = ['collaborative', 'competitive', 'crowdsourced', 'meta', 'asymmetric', 'asynchronous', 'multi-level', '4 dimensional', 'programmable', 'neon', 'recursive']
+    private activities = ['art gallery', 'improv performance', 'card game', 'sculpture', 'DJ set', 'dress-up party', 'food fight', 'escape room', 'rave', 'host club', 'beat saber', 'maze', 'circus', 'air hockey', 'mosh pit', 'hide and seek', 'conversation starters', 'board game']
+    private environments = ['in space', 'in the jungle', 'in zero-g', 'under the sea', 'on a boat', 'in a garden', 'in a diner', 'in a dreamscape', 'on a train', 'in the sky', 'inside the magic leap whale', 'on drugs', 'on a snowy mountain', 'in the desert', 'in a city']
     
     handler(user: MRE.User) {
         /*if (this.isWriting) return;
