@@ -2,7 +2,6 @@
 import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 
 export default class RandomIdeaGenerator {
-    private isWriting = false;
     private didSaveOnce = false;
     private didSetup = false;
     private actor: MRE.Actor;
@@ -13,6 +12,7 @@ export default class RandomIdeaGenerator {
     private environments = ['in space', 'in the jungle', 'in zero-g']
     
     handler(user: MRE.User) {
+        this.didSaveOnce = true;
         /*if (this.isWriting) return;
         this.isWriting = true;
         user.prompt("Enter text", true).then(response => {
@@ -26,7 +26,9 @@ export default class RandomIdeaGenerator {
         let random1 = this.getRandomInt(this.adjectives.length)
         let random2 = this.getRandomInt(this.activities.length)
         let random3 = this.getRandomInt(this.environments.length)
-        this.text.text.contents = this.adjectives[random1] + ' ' + this.activities[random2] + ' ' + this.environments[random3]
+        const idea =  this.adjectives[random1] + ' ' + this.activities[random2] + ' ' + this.environments[random3];
+        this.text.text.contents = idea;
+        this.text.text.height = 1.3 / idea.length;
     }
 
     getRandomInt(max: number) {
@@ -36,10 +38,11 @@ export default class RandomIdeaGenerator {
     constructor(private context: MRE.Context, material: MRE.Material, position: Partial<MRE.Vector3Like>) {
         const self = this;
 
+        MRE.log.info("app", "Make rng");
         this.actor = MRE.Actor.CreatePrimitive(new MRE.AssetContainer(this.context), {
             definition: {
                 shape: MRE.PrimitiveShape.Box,
-                dimensions: { x: 0.16, y: 0.32, z: 0.01 },
+                dimensions: { x: 0.72, y: 0.12, z: 0.02 },
             },
             actor: {
                 name: 'StickyNote',
@@ -55,12 +58,14 @@ export default class RandomIdeaGenerator {
             addCollider: true
         });
 
+        MRE.log.info("app", "Make rng");
+
         this.text = MRE.Actor.Create(this.context, {
             actor: {
                 parentId: this.actor.id,
                 name: 'Text',
                 transform: {
-                    local: { position: { x: 0, y: 0, z: -0.01 } }
+                    local: { position: { x: 0, y: 0, z: -0.02 } }
                 },
                 text: {
                     anchor: MRE.TextAnchorLocation.MiddleCenter,

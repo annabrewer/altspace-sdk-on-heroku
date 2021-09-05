@@ -750,11 +750,11 @@
         "signature": "bd30f27645e63b7ecfdba60baf818057d5a32bd341ab433985a98d95b1b492af"
       },
       "./src/random-idea-generator.ts": {
-        "version": "6cf527dfcee10b24dcbfeb371b077b089dd5f457ce4522ae885d86505e600cff",
-        "signature": "888ba54a58741e15092971e8ab661ae58f07f9cf4f0341e7af83e1ac10cc71da"
+        "version": "f475aa28969b6964926806084828672463056292131911ac3f695424eb5e598f",
+        "signature": "76fa1548bc182d30a674fb47e98cf392a1e2a2e2a4f52386257b5c87a05ac2cd"
       },
       "./src/sticky-note.ts": {
-        "version": "fd4937ab7405cbdf3e5a19c63d82c94074d7a2440b2918202568f77d92832a5c",
+        "version": "91cd3ef6df54ca6c6a9b362cb293aa152b3d8c4b9b5f1975b8a13a4581e53ee2",
         "signature": "302fd285c5165f4a60fdfb82db74506156f5f06e80cfdba9479509cdfb6232cb"
       },
       "./src/env.ts": {
@@ -766,7 +766,7 @@
         "signature": "35f5f7498068e58acae1c82aa697743ffc367bc361561814766ba8142c8ff71a"
       },
       "./src/app.ts": {
-        "version": "5d9a04a3ced5373bb9e0c3526a89307fec59285c845d5ab876e0c70268e6aa49",
+        "version": "2d06a7a1307aa759dffb94837174e9c6d1ee50016af348325b37ec776192f6dc",
         "signature": "38705ca3509972578f0defd652a2264c7106df1c9d09d25d4d2014d70ee7b6a2"
       },
       "./src/paint-can.ts": {
@@ -807,6 +807,8 @@
       "strictNullChecks": false,
       "moduleResolution": 2,
       "esModuleInterop": true,
+      "watch": true,
+      "preserveWatchOutput": true,
       "configFilePath": "./tsconfig.json"
     },
     "referencedMap": {
@@ -2057,6 +2059,9 @@
         "./node_modules/@microsoft/mixed-reality-extension-sdk/built/user/index.d.ts",
         "./node_modules/@microsoft/mixed-reality-extension-sdk/built/util/index.d.ts"
       ],
+      "./src/random-idea-generator.ts": [
+        "./node_modules/@microsoft/mixed-reality-extension-sdk/built/index.d.ts"
+      ],
       "./src/sticky-note.ts": [
         "./node_modules/@microsoft/mixed-reality-extension-sdk/built/index.d.ts"
       ],
@@ -2069,9 +2074,6 @@
       ],
       "./node_modules/@types/dotenv/index.d.ts": [
         "./node_modules/@types/node/index.d.ts"
-      ],
-      "./src/random-idea-generator.ts": [
-        "./node_modules/@microsoft/mixed-reality-extension-sdk/built/index.d.ts"
       ]
     },
     "semanticDiagnosticsPerFile": [
@@ -2262,16 +2264,16 @@
       "./node_modules/@microsoft/mixed-reality-extension-sdk/built/core/websocketadapter.d.ts",
       "./node_modules/@microsoft/mixed-reality-extension-sdk/built/core/index.d.ts",
       "./node_modules/@microsoft/mixed-reality-extension-sdk/built/index.d.ts",
-      "./src/sticky-note.ts",
+      "./src/random-idea-generator.ts",
       "./src/env.ts",
       "./src/thing.ts",
+      "./src/app.ts",
       "./src/paint-can.ts",
       "./node_modules/@types/dotenv/index.d.ts",
       "./src/server.ts",
       "./node_modules/@types/eslint-visitor-keys/index.d.ts",
       "./node_modules/@types/json-schema/index.d.ts",
-      "./src/random-idea-generator.ts",
-      "./src/app.ts"
+      "./src/sticky-note.ts"
     ]
   },
   "version": "3.8.3"
